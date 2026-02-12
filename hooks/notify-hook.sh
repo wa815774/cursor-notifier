@@ -175,6 +175,10 @@ echo "[$(date)] Task: $task_name | Summary: $summary" >> /tmp/cursor-hook.log
 # -execute: 点击通知时执行的命令（打开特定项目的 Cursor 窗口）
 # 注意：不使用 -sender 参数，让通知显示为来自 terminal-notifier
 # 这样即使焦点在 Cursor 上也会弹出横幅通知
+
+# 先播放声音（后台执行，不阻塞），避免等 terminal-notifier 完成后才响
+afplay /System/Library/Sounds/Glass.aiff &
+
 if [ -n "$workspace_root" ]; then
     # 如果有项目路径，点击时打开该项目
     /opt/homebrew/bin/terminal-notifier \
@@ -194,9 +198,6 @@ else
         -ignoreDnD \
         2>&1 >> /tmp/cursor-hook.log
 fi
-
-# 强制播放声音（terminal-notifier 的 -sound 参数不起作用时的备用方案）
-afplay /System/Library/Sounds/Glass.aiff &
 
 echo "[$(date)] terminal-notifier executed" >> /tmp/cursor-hook.log
 
